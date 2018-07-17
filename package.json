@@ -1,0 +1,13 @@
+{
+  "name": "react-media-query",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-container-query": "^0.11.0"  
+  }
+}
