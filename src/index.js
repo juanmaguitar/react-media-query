@@ -11,9 +11,9 @@ const BREAKPOINTS = {
 }
 
 const getQueryObject = BREAKPOINTS => 
-  Object.entries(BREAKPOINTS).reduce( (query, [sizeResponsive, breakpointCurrent]) => {
-    query[sizeResponsive.toUpperCase()] = {
-      minWidth: breakpointCurrent
+  Object.entries(BREAKPOINTS).reduce( (query, [size, breakpoint]) => {
+    query[size.toUpperCase()] = {
+      minWidth: breakpoint
     }
     return query
   },{})
