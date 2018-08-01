@@ -23,14 +23,16 @@ const MediaQueryFactory = BREAKPOINTS =>
       if (viewport) {
         window.addEventListener('resize', this.handleWindowResize)
         initialWidth = window.outerWidth
+        console.log(`viewport initialWidth → ${initialWidth}`)
       }
       else {
         this.containerResizeObserver = new ResizeObserver(this.handleContainerResize)
         this.containerResizeObserver.observe(container);
         initialWidth = getWidth(container)
+        console.log(`container initialWidth → ${initialWidth}`)
       }
 
-      const result = matchQueries(initialWidth)
+      const result = this.matchQueries(initialWidth)
       this.setState({ params: result })
       
     }
