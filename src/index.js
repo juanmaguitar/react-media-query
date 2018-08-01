@@ -1,46 +1,31 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from "react-dom"
 import ResizeObserver from 'resize-observer-polyfill';  
 import shallowEqual from 'shallowequal'
 
 import {getWidth, matchQueries} from './helpers'
 
-
 import BREAKPOINTS from './breakpoints.json'
-
-// const MediaQueryFactory = BREAKPOINTS => props => {
-//   return (
-//     <ContainerQuery breakpoints={BREAKPOINTS} {...props} >
-//       { props.children }
-//     </ContainerQuery>
-//   )
-// }
 
 const MediaQueryFactory = BREAKPOINTS => 
   class MediaQuery extends Component {
     state = {
-      params
+      params: {}
     }
     containerResizeObserver = null
     matchQueries = matchQueries(BREAKPOINTS)
 
     componentDidMount() {
       const { viewport } = this.props
-      const { params } = this.state
       const container = ReactDOM.findDOMNode(this)
-
-      let initialWidth
+      let initialWidth = 0
       
       if (viewport) {
-        window.addEventListener('resize', this.handleResize)
+        window.addEventListener('resize', this.handleWindowResize)
         initialWidth = window.outerWidth
       }
       else {
-        this.containerResizeObserver = new ResizeObserver( ([ target ]) => {
-          const width = getWidth(target)
-          const result = matchQueries(width)
-          if (!shallowEqual(result, params)) this.setState({ params: result })
-        });
+        this.containerResizeObserver = new ResizeObserver(this.handleContainerResize)
         this.containerResizeObserver.observe(container);
         initialWidth = getWidth(container)
       }
@@ -56,9 +41,18 @@ const MediaQueryFactory = BREAKPOINTS =>
       window.removeEventListener('resize', this.handleResize)
     }
 
-    handleResize = e => {
+    handleWindowResize = e => {
       const { outerWidth: width } = e.target
-      const result = matchQueries(width);
+      const { params } = this.state
+      const result = this.matchQueries(width);
+      if (!shallowEqual(result, params)) this.setState({ params: result })
+    }
+
+    handleContainerResize = entries => {
+      const target = entries[0].target
+      const width = getWidth(target)
+      const { params } = this.state
+      const result = this.matchQueries(width)
       if (!shallowEqual(result, params)) this.setState({ params: result })
     }
 
